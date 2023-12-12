@@ -1,0 +1,220 @@
+import 'package:flutter/material.dart';
+
+// This is the main function...
+// The function that will start our application
+void main() {
+  runApp(const TodoApp()); // We create an instance of that class / widget
+}
+
+
+// This is the root of our application
+// In flutter every component of the application is a widget
+class TodoApp extends StatelessWidget {
+  const TodoApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Todo app',    // A name for the app in the OS
+      theme: ThemeData(     // The theme of the app
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigoAccent),
+        useMaterial3: true,
+      ),
+      home: const TodoListScreen(), // The home page of the app
+            // I'm creating a new instance of a Stateful widget that I am defining myself
+    );
+  }
+}
+
+
+// This is the home page of our application
+// In this case we are using a stateful widget
+class TodoListScreen extends StatefulWidget {
+  const TodoListScreen({super.key});
+  @override
+  State<TodoListScreen> createState() => _TodoListScreenState();
+}
+
+// This is the state of our home page
+// The concept of state is a bit confusing at first
+// Cause it's not the same as the state of a component in React / Vue / Angular
+// In flutter, the state is both the data and the UI
+class _TodoListScreenState extends State<TodoListScreen> {
+
+  // Define a variable containing the list of items to display
+  final List<Todo> _todoList = []; // Initially empty
+  final TextEditingController _myTodoTitleFormController = TextEditingController();
+  final TextEditingController _myTodoDescriptionFormController = TextEditingController();
+
+  void _addTodoItem(String title, String description) {
+    setState(() {
+      // We would add a new item to the previous list
+      _todoList.add(Todo(
+        title: title,
+        description: description
+      ));
+    });
+  }
+  void _deleteTodo(Todo todoToBeDeleted) {
+    setState(() {
+      // We would add a new item to the previous list
+      _todoList.remove(todoToBeDeleted);
+    });
+  }
+  void _toogleTodoCompletion(Todo todoToBeToggled) {
+    setState(() {
+      // We would add a new item to the previous list
+      todoToBeToggled.completed = !todoToBeToggled.completed;
+    });
+  }
+  void _editTodo(Todo todoToBeEdited, String title, String description) {
+    setState(() {
+      // We would add a new item to the previous list
+      todoToBeEdited.title = title;
+      todoToBeEdited.description = description;
+    });
+  }
+
+  Future<void> _displayTodoForm({Todo? existingTodo}) async{
+    // Case we have an existingTodo, we would display its title... and description
+    // Case we don't have an existingTodo, we would display an empty form
+    _myTodoTitleFormController.text = existingTodo?.title ?? '';
+    _myTodoDescriptionFormController.text = existingTodo?.description ?? '';
+    // We would display a new form to add a new to-do
+    // This function will call _addTodoItem when the form is submitted
+    // When calling that function, it will supply the data of the form: title + description
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(existingTodo == null ? 'Add a new todo' : 'Edit todo'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: _myTodoTitleFormController,
+                  decoration: const InputDecoration(
+                    labelText: 'Todo title',
+                  ),
+                  autofocus: true,
+                ),
+                TextField(
+                  controller: _myTodoDescriptionFormController,
+                  maxLines: 3,
+                  decoration: const InputDecoration(
+                    labelText: 'Todo description',
+                  )
+                ),
+              ],
+            ),
+            actions: [ // The buttons at the bottom of the dialog
+              OutlinedButton(
+                onPressed: () {
+                  // Let's reset the form
+                  Navigator.of(context).pop(); // Close the dialog.
+                  // The navigator (kind the same as a browser history) is a stack of screens
+                  // we can push a new screen to the stack, and pop it to go back to the previous screen
+                },
+                child: const Text('Cancel')
+              ),
+              ElevatedButton(
+                  onPressed: () {
+                    if (existingTodo != null) {
+                      _editTodo(
+                          existingTodo,
+                          _myTodoTitleFormController.text,
+                          _myTodoDescriptionFormController.text
+                      );
+                    }else {
+                      _addTodoItem(
+                          _myTodoTitleFormController.text,
+                          _myTodoDescriptionFormController.text
+                      );
+                    }
+                    // Let's reset the form
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(existingTodo == null ? 'Add' : 'Edit')
+              )
+            ],
+          );
+        }
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) { // This methos is the one which is gonna be called
+    // when the component/Screen/Widget is created and when its state changes
+    // It will re-render the UI. For those of you working with React: this is the render method
+    return Scaffold( // Basic layout of the screen in Material Design
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: const Text('Todo list'),
+      ),
+      body: ListView(
+        children: _todoList.map((Todo todo) {
+          return Dismissible(
+              key: Key(todo.title),
+              background: Container(
+                color: Colors.red,
+                child: const Icon(Icons.delete),
+              ),
+              onDismissed: (direction) {
+                _deleteTodo(
+                    todo
+                );
+              },
+              child:
+
+                ListTile(
+                onTap: (){
+                  _displayTodoForm(existingTodo: todo);
+                },
+                title: Text(todo.title),
+                subtitle: Text(todo.description),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        _toogleTodoCompletion(todo);
+                      },
+                      icon: Icon(todo.completed ? Icons.check_box : Icons.check_box_outline_blank),
+                    ),
+                    /*
+                    IconButton(
+                      onPressed: () {
+                        _deleteTodo(
+                            todo
+                        );
+                      },
+                      icon: const Icon(Icons.delete),
+                    )*/
+                  ],
+                ),
+              )
+          );
+        }).toList(),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed:_displayTodoForm,
+        tooltip: 'Add a new Todo',
+        child: const Icon(Icons.add),
+      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
+
+
+// Let's define what a TO DO is
+class Todo {
+  String title;
+  String description;
+  bool completed;
+
+  Todo({ // This is the constructor of the class
+    required this.title,
+    required this.description,
+    this.completed = false,
+  });
+}
