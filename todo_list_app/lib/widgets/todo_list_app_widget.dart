@@ -2,6 +2,9 @@
 // In flutter every component of the application is a widget
 import 'package:dummy_app/widgets/todo_list_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../bloc/todo_bloc.dart';
 
 class TodoListApp extends StatelessWidget {
   const TodoListApp({super.key});
@@ -14,7 +17,10 @@ class TodoListApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigoAccent),
         useMaterial3: true,
       ),
-      home: const TodoListScreen(), // The home page of the app
+      home: BlocProvider<TodoBloc>( // We initialize the bloc
+        create: (context) => TodoBloc(),
+        child: const TodoListScreen(), // The home page of the app
+      ) // The home page of the app
       // I'm creating a new instance of a Stateful widget that I am defining myself
     );
   }

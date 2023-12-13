@@ -43,7 +43,7 @@ class TodoListScreen extends StatelessWidget {
                     showDialog(
                         context: context,
                         builder: (BuildContext context) {
-                          return TodoFormWidget(existingTodo: todo);
+                          return TodoFormWidget(todoBloc: todoBloc, existingTodo: todo);
                         });
                   },
                   title: Text(todo.title),
@@ -70,7 +70,7 @@ class TodoListScreen extends StatelessWidget {
           showDialog(
               context: context,
               builder: (BuildContext context) {
-                return const TodoFormWidget();
+                return TodoFormWidget(todoBloc: todoBloc);
               });
         },
         tooltip: 'Add a new Todo',

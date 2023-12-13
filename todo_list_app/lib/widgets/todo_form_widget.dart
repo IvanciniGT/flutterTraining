@@ -2,19 +2,17 @@
 // In flutter every component of the application is a widget
 import 'package:dummy_app/bloc/todo_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../events/todo/add_todo_event.dart';
 import '../models/todo.dart';
 
 class TodoFormWidget extends StatelessWidget {
 
   final Todo? existingTodo;
-  const TodoFormWidget({super.key, this.existingTodo});
+  final TodoBloc todoBloc;
+  const TodoFormWidget({super.key, required this.todoBloc, this.existingTodo});
 
   @override
   Widget build(BuildContext context) {
-    final TodoBloc todoBloc = BlocProvider.of<TodoBloc>(context); // Dependency Injection
     final TextEditingController myTodoTitleFormController = TextEditingController();
     final TextEditingController myTodoDescriptionFormController = TextEditingController();
     myTodoTitleFormController.text = existingTodo?.title ?? '';
