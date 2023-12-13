@@ -2,6 +2,7 @@
 // Here we will capture all the events that will change the state of our application according to the business logic
 
 import 'package:dummy_app/events/todo/todo_event.dart';
+import 'package:dummy_app/events/todo/update_todo_event.dart';
 import 'package:dummy_app/state/todo_list.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -24,6 +25,14 @@ class TodoBloc extends Bloc<TodoEvent, TodoList> {
       // Generate a new state (a new list of todos, without the one that was removed)
       // Publish that new state
       emit( TodoList(todos: state.todos.where((todo) => todo != event.todo).toList()) )
+    );
+    on<UpdateTodoEvent>((event, emit) {
+      // Generate a new state (a new list of todos, with the one that was updated)
+      final updatedTodo = event.todo.copyWith(completed: event.todo.completed, description: event.todo.description, title: event.todo.title);
+      final newTodoList = TodoList(todos: state.todos.map((todo) => todo == event.todo ? updatedTodo : todo).toList());
+      // Publish that new state
+      emit(newTodoList);
+      }
     );
   }
 

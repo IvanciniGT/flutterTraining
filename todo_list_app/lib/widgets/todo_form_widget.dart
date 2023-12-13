@@ -3,6 +3,7 @@
 import 'package:dummy_app/bloc/todo_bloc.dart';
 import 'package:flutter/material.dart';
 import '../events/todo/add_todo_event.dart';
+import '../events/todo/update_todo_event.dart';
 import '../models/todo.dart';
 
 class TodoFormWidget extends StatelessWidget {
@@ -50,7 +51,9 @@ class TodoFormWidget extends StatelessWidget {
         ElevatedButton(
             onPressed: () {
               if (existingTodo != null) {
-                // TODO : Implements the UpdateTodoEvent
+                todoBloc.add(UpdateTodoEvent(existingTodo!,
+                    title: myTodoTitleFormController.text,
+                    description: myTodoDescriptionFormController.text));
               } else {
                 todoBloc.add(AddTodoEvent(Todo(
                     title: myTodoTitleFormController.text,

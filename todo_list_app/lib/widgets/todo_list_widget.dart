@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../bloc/todo_bloc.dart';
 import '../events/todo/remove_todo_event.dart';
+import '../events/todo/update_todo_event.dart';
 import '../models/todo.dart';
 import '../state/todo_list.dart';
 
@@ -53,7 +54,7 @@ class TodoListScreen extends StatelessWidget {
                     children: [
                       IconButton(
                         onPressed: () {
-                          // TODO : Implements the UpdateTodoEvent
+                          todoBloc.add(UpdateTodoEvent(todo, completed: !todo.completed));
                         },
                         icon: Icon(todo.completed
                             ? Icons.check_box
