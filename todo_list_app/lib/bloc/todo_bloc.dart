@@ -28,7 +28,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoList> {
     );
     on<UpdateTodoEvent>((event, emit) {
       // Generate a new state (a new list of todos, with the one that was updated)
-      final updatedTodo = event.todo.copyWith(completed: event.todo.completed, description: event.todo.description, title: event.todo.title);
+      final updatedTodo = event.todo.copyWith(completed: event.completed, description: event.description, title: event.title);
       final newTodoList = TodoList(todos: state.todos.map((todo) => todo == event.todo ? updatedTodo : todo).toList());
       // Publish that new state
       emit(newTodoList);

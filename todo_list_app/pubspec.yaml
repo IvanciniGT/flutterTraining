@@ -32,6 +32,8 @@ dependencies:
     sdk: flutter
   equatable: ^2.0.0
   flutter_bloc: ^8.0.1
+  intl: ^0.17.0    # This library includes internationalization and localization.
+                   # We have this DateFormater class that uses this library.
 
 
   # The following adds the Cupertino Icons font to your application.
