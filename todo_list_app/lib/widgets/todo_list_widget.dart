@@ -16,7 +16,8 @@ class TodoListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TodoBloc todoBloc = BlocProvider.of<TodoBloc>(context); // Dependency Injection
+    final TodoBloc todoBloc =
+        BlocProvider.of<TodoBloc>(context); // Dependency Injection
     // This methos is the one which is gonna be called
     // when the component/Screen/Widget is created and when its state changes
     // It will re-render the UI. For those of you working with React: this is the render method
@@ -26,8 +27,10 @@ class TodoListScreen extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('Todo list'),
       ),
-      body: BlocBuilder<TodoBloc, TodoList>( // This will be reexecuted each time the state changes
-          builder: (context, state) { // Dependency Injection
+      body: BlocBuilder<TodoBloc, TodoList>(
+          // This will be reexecuted each time the state changes
+          builder: (context, state) {
+        // Dependency Injection
         return ListView(
           children: state.todos.map((Todo todo) {
             return Dismissible(
@@ -37,15 +40,20 @@ class TodoListScreen extends StatelessWidget {
                   child: const Icon(Icons.delete),
                 ),
                 onDismissed: (direction) {
-                  todoBloc.add(RemoveTodoEvent(todo)); // Send a new To-do Removed event to the bloc
+                  todoBloc.add(RemoveTodoEvent(
+                      todo)); // Send a new To-do Removed event to the bloc
                 },
                 child: ListTile(
                   onTap: () {
                     showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return TodoFormWidget(todoBloc: todoBloc, existingTodo: todo);
-                        });
+                      context: context,
+                      builder: (dialogContext) {
+                        return BlocProvider.value(
+                          value: BlocProvider.of<TodoBloc>(context),
+                          child: TodoFormWidget(existingTodo: todo),
+                        );
+                      },
+                    );
                   },
                   title: Text(todo.title),
                   subtitle: Text(todo.description),
@@ -54,7 +62,8 @@ class TodoListScreen extends StatelessWidget {
                     children: [
                       IconButton(
                         onPressed: () {
-                          todoBloc.add(UpdateTodoEvent(todo, completed: !todo.completed));
+                          todoBloc.add(UpdateTodoEvent(todo,
+                              completed: !todo.completed));
                         },
                         icon: Icon(todo.completed
                             ? Icons.check_box
@@ -67,12 +76,16 @@ class TodoListScreen extends StatelessWidget {
         );
       }),
       floatingActionButton: FloatingActionButton(
-        onPressed: (){
+        onPressed: () {
           showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return TodoFormWidget(todoBloc: todoBloc);
-              });
+            context: context,
+            builder: (dialogContext) {
+              return BlocProvider.value(
+                value: BlocProvider.of<TodoBloc>(context),
+                child: const TodoFormWidget(),
+              );
+            },
+          );
         },
         tooltip: 'Add a new Todo',
         child: const Icon(Icons.add),
