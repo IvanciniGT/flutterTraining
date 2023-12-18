@@ -24,10 +24,6 @@ class TodoListScreen extends StatelessWidget {
     // It will re-render the UI. For those of you working with React: this is the render method
     return Scaffold(
       // Basic layout of the screen in Material Design
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Todo list'),
-      ),
       body: BlocBuilder<TodoBloc, TodoList>(builder: (context, state) {
         // Calculate summary counts
         int pendingCount = state.todos

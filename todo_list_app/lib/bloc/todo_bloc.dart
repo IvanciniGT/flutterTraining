@@ -11,6 +11,7 @@ import '../events/todo/remove_todo_event.dart';
 
 class TodoBloc extends Bloc<TodoEvent, TodoList> {
   TodoBloc() : super(const TodoList()){
+
     // Here we implement the event listeners
     on<AddTodoEvent>((event, emit) {
       // Generate a new state (a new list of todos)
@@ -21,11 +22,13 @@ class TodoBloc extends Bloc<TodoEvent, TodoList> {
       // Publish that new state
       emit(newTodoList); // This sets the new state... but also it will notify that we have a new state to the widgets
     });
+
     on<RemoveTodoEvent>((event, emit) =>
       // Generate a new state (a new list of todos, without the one that was removed)
       // Publish that new state
       emit( TodoList(todos: state.todos.where((todo) => todo != event.todo).toList()) )
     );
+
     on<UpdateTodoEvent>((event, emit) {
       // Generate a new state (a new list of todos, with the one that was updated)
       final updatedTodo = event.todo.copyWith(completed: event.completed, description: event.description, title: event.title);
