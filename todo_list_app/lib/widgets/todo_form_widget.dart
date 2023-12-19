@@ -182,6 +182,7 @@ class _TodoFormWidgetState extends State<TodoFormWidget> {
               ));
             } else {
               todoBloc.add(AddTodoEvent(Todo(
+                  id: DateTime.now().toString(), // Or UniqueKey().toString()
                   title: myTodoTitleFormController.text,
                   description: myTodoDescriptionFormController.text,
                   deadLine: deadline)));

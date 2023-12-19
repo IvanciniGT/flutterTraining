@@ -35,32 +35,48 @@ class _MainScreenState extends State<MainScreen> {
     // This methos is the one which is gonna be called
     // when the component/Screen/Widget is created and when its state changes
     // It will re-render the UI. For those of you working with React: this is the render method
-    return Scaffold(
-      // Basic layout of the screen in Material Design
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        //title: Text('${BlocProvider.of<UserSettingsBloc>(context).state.userName}\'s Todo List'),
-        title: BlocBuilder<UserSettingsBloc, UserSettingsState>(
-          builder: (context, state) {
-            return Text('${state.userName}\'s Todo List');
-          }
-        ),
-      ),
-      body: _tabs[_selectedTab],
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: onTabTapped, // Handle tab changes
-        currentIndex: _selectedTab,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+    return BlocConsumer<UserSettingsBloc, UserSettingsState>(
+        builder: (context, state) {
+                              return Scaffold(
+                                // Basic layout of the screen in Material Design
+                                appBar: AppBar(
+                                  backgroundColor: Theme
+                                      .of(context)
+                                      .colorScheme
+                                      .inversePrimary,
+                                  //title: Text('${BlocProvider.of<UserSettingsBloc>(context).state.userName}\'s Todo List'),
+                                  title: BlocBuilder<UserSettingsBloc, UserSettingsState>(
+                                      builder: (context, state) {
+                                        return Text('${state.userName}\'s Todo List');
+                                      }
+                                  ),
+                                ),
+                                body: _tabs[_selectedTab],
+                                bottomNavigationBar: BottomNavigationBar(
+                                  onTap: onTabTapped, // Handle tab changes
+                                  currentIndex: _selectedTab,
+                                  items: const [
+                                    BottomNavigationBarItem(
+                                      icon: Icon(Icons.home),
+                                      label: 'Home',
+                                    ),
+                                    BottomNavigationBarItem(
+                                      icon: Icon(Icons.settings),
+                                      label: 'Settings',
+                                    ),
+                                  ],
+                                ),
+                              );
+    },
+    listener: (context, state) {
+      if (state is UserSettingsErrorState) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(state.errorMessage),
+            backgroundColor: Colors.red,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
-        ],
-      ),
-    );
+        );
+      }
+    });
   }
 }

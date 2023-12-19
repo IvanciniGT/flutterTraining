@@ -31,7 +31,6 @@ class UserSettingsBloc extends Bloc<UserSettingsEvent, UserSettingsState> {
                                       // We will not wait for the response of this method
                                       // Therefor we will not know if an error happened or not while storing the value in the device
                                       // We need a way to check for that.
-                                      // TODO: Check for errors while storing the value in the device, and alert the user if an error happened
     });
 
     on<DarkThemeToggled>((event, emit) {
@@ -44,16 +43,26 @@ class UserSettingsBloc extends Bloc<UserSettingsEvent, UserSettingsState> {
   }
 
   void _storeUserName(String userName) async {
-    // We need to get access to the Shared Preferences library
-    final preferences = await SharedPreferences.getInstance();
-    // We can now store the value
-    await preferences.setString('userName', userName);
+    try {
+      // We need to get access to the Shared Preferences library
+      final preferences = await SharedPreferences.getInstance();
+      // We can now store the value
+      await preferences.setString('userName', userName);
+      //throw Exception('This is an error'); // This is just to test the error handling
+    } catch (e) {
+      // We notify a new state to WHOEVER is listening to this bloc
+      emit(UserSettingsErrorState.fromState(state, 'Error while storing the user name in the preferences'));
+    }
   }
 
   void _storeDarkModeEnabled(bool isEnabled)  {
     SharedPreferences.getInstance().then(
             (preferences) => preferences.setBool('darkModeEnabled', isEnabled)
     );
+    // We should change this code, and write a code instead that looks like the one we have in _storeUserName
+    // to be able to notify the user if an error happened while storing the value in the device
+
+    // I'M just writing this code like this because I want you toi have an example of how to use the .then() syntax
   }
   // Both syntaxes are valid
 }

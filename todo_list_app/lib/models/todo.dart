@@ -4,11 +4,28 @@
 // Let's convert this model/entity in an inmutable class
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
+part 'todo.g.dart'; // This name is just a convention in flutter.
+                    // g stands for generated
+                    // this command is going to generate a file called todo.g.dart
+                    // flutter pub run build_runner build
+// this part statement tells dart that this file is part of the todo.g.dart file
+// In other words, that both files: todo.dart and todo.g.dart are the same file
+// And therefore, that the code in both files should be treated as if it was in the same file
+// Private members of one file can be accessed from the other file
+
+@HiveType(typeId: 0) // This is the type of the object To do in flutter. It should be a unique number in the app
 class Todo extends Equatable{
+  @HiveField(0) // This is the id of the object. It should be unique in the app
+  final String id ; // This is the unique identifier of the object
+  @HiveField(1) // This is the title of the object
   final String title;
+  @HiveField(2) // This is the description of the object
   final String description;
+  @HiveField(3) // This is the completed status of the object
   final bool completed;
+  @HiveField(4) // This is the deadline of the object
   final DateTime? deadLine; // This is a nullable field // Contains both Date and Time information
   /*
     WORKING WITH DATES and TIMES
@@ -22,6 +39,7 @@ class Todo extends Equatable{
 
 
   const Todo({ // This is the constructor of the class
+    required this.id,
     required this.title,
     required this.description,
     this.completed = false,
@@ -36,6 +54,7 @@ class Todo extends Equatable{
     DateTime? deadLine
   }) {
     return Todo(
+      id: id,
       title: title ?? this.title,
       description: description ?? this.description,
       completed: completed ?? this.completed,
@@ -44,5 +63,5 @@ class Todo extends Equatable{
   }
 
   @override
-  List<Object?> get props => [title, description, completed, deadLine];
+  List<Object?> get props => [id, title, description, completed, deadLine];
 }

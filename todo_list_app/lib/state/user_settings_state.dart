@@ -17,3 +17,16 @@ class UserSettingsState extends Equatable{
   @override
   List<Object?> get props => [userName, darkModeEnabled];
 }
+
+class UserSettingsErrorState extends UserSettingsState {
+  final String errorMessage;
+
+  const UserSettingsErrorState({required super.userName, required super.darkModeEnabled, required this.errorMessage});
+
+  static UserSettingsErrorState fromState(UserSettingsState state, String errorMessage) {
+    return UserSettingsErrorState(userName: state.userName, darkModeEnabled: state.darkModeEnabled, errorMessage: errorMessage);
+  }
+
+  @override
+  List<Object?> get props => [userName, darkModeEnabled, errorMessage];
+}
