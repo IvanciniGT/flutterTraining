@@ -6,10 +6,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../bloc/todo_bloc.dart';
 import '../state/user_settings_state.dart';
+import '../themes/todo_list_app_themes.dart';
 import 'main_screen_widget.dart';
 
 class TodoListApp extends StatelessWidget {
-  const TodoListApp({super.key});
+
+  final String initialUserName;
+  final bool initialDarkModeEnabled;
+
+  const TodoListApp({super.key, required this.initialUserName, required this.initialDarkModeEnabled});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +22,10 @@ class TodoListApp extends StatelessWidget {
     // We will need to read the last stored values from the device (shared preferences)
     // And set those as initial values right here!!!            vvvvvvvvvvvvvvvvvvvvvvvvvvvv
     return BlocProvider<UserSettingsBloc>( // We initialize the bloc
-      create: (context) => UserSettingsBloc(initialUserName:'Ivan', initialDarkModeEnabled: false),
+      create: (context) => UserSettingsBloc(
+          initialUserName: initialUserName,
+          initialDarkModeEnabled: initialDarkModeEnabled
+      ),
       child:
         BlocBuilder<UserSettingsBloc, UserSettingsState>(
           builder: (context, state) {
@@ -36,36 +44,4 @@ class TodoListApp extends StatelessWidget {
     );
   }
 }
-
-
-class AppThemes {
-  static final lightTheme = ThemeData(
-    brightness: Brightness.light,
-    primarySwatch: Colors.blue,
-    colorScheme: const ColorScheme.light(
-      primary: Colors.blue,
-      secondary: Colors.blueAccent,
-    ),
-    // Additional customizations for light theme
-  );
-
-  static final darkTheme = ThemeData(
-    brightness: Brightness.dark,
-    primarySwatch: Colors.blue,
-    colorScheme: const ColorScheme.dark(
-      primary: Colors.blue,
-      secondary: Colors.blueAccent,
-    ),
-    // Additional customizations for dark theme
-  );
-
-  // Both in a List
-  static final themes = [lightTheme, darkTheme];
-}
-
-
-
-
-
-
 

@@ -15,11 +15,18 @@ class SettingsScreen extends StatelessWidget {
     return Column(
       children: [
           TextField(
-             onChanged: (value) => BlocProvider.of<UserSettingsBloc>(context).add(UserNameChanged(value)),
+             onChanged: (value) {
+               BlocProvider.of<UserSettingsBloc>(context).add(UserNameChanged(value));
+               // Call the shared preferences to persist the new value... This probably is not the best place to do it
+               // It would be a best option to do it in the bloc... as the bloc is the one which is in charge of the state
+               // And we want the bloc to be the only one in charge of the state
+               },
             // Field name:
             decoration: const InputDecoration(
               labelText: 'User Name',
             ),
+            // Initial value:
+            controller: TextEditingController(text: BlocProvider.of<UserSettingsBloc>(context).state.userName),
           ),
           Row(
           children: [
