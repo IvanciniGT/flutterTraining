@@ -33,6 +33,7 @@ color androidx_core_ripple_material_light
 color androidx_core_secondary_text_default_material_light
 color notification_action_color_filter
 color notification_icon_bg_color
+color white
 dimen compat_button_inset_horizontal_material
 dimen compat_button_inset_vertical_material
 dimen compat_button_padding_horizontal_material
@@ -68,6 +69,7 @@ drawable notification_template_icon_bg
 drawable notification_template_icon_low_bg
 drawable notification_tile_bg
 drawable notify_panel_notification_icon_bg
+drawable splash_screen
 id accessibility_action_clickable_span
 id accessibility_custom_action_0
 id accessibility_custom_action_1

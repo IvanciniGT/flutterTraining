@@ -42,7 +42,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   hive: ^2.2.3            # Key-value database that works on Android, iOS, Linux, MacOS and Windows.
   hive_flutter: ^1.1.0    # Extension of Hive for Flutter. It provides a custom HiveStore and HiveBoxes that can be used to store Hive data in the Flutter widget tree.
-
+  http: ^1.1.2
 dev_dependencies:
   flutter_test:
     sdk: flutter
